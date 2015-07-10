@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/mvc
+http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-4.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+	<!-- 自动扫描的包名配置 -->
+	<!--  <context:component-scan base-package="com.tsingsoft" /> -->
+	
+	<!-- Spring开启注解配置  -->
+    <context:annotation-config /> 
+    
+	<!-- 启动自动扫描该包下所有的@Controller -->
+    <context:component-scan base-package="com.tsingsoft.*.controller" />  
+
+    <!-- spring context配置文件  -->  
+    <context:component-scan base-package="com.tsingsoft.">  
+        <context:exclude-filter type="regex" expression=".system.*Controller*" />  
+    </context:component-scan>  
+    
+	<!-- MVC开启注解配置 -->
+	<mvc:annotation-driven />
+	
+	
+    <!-- 基于注释的事务，当注释中发现@Transactional时，使用id为“transactionManager”的事务管理器  -->
+    <!-- 如果没有设置transaction-manager的值，则spring以缺省默认的事务管理器来处理事务，默认事务管理器为第一个加载的事务管理器 -->
+    <!-- 只有@Transactional注释时，传播模式要设置为 REQUIRED，只读标志设置为 false，事务隔离级别设置为 READ_COMMITTED，而且事务不会针对受控异常（checked exception）回滚。 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- 视图控制 -->
+	<bean  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	
+		<!-- 视图前缀 -->
+		<property name="prefix"  value="/WEB-INF/views/"></property>
+		<!-- 视图后缀 -->
+		<property name="suffix" value=".jsp">
+		</property>
+	</bean>
+	
+	 <!-- 静态资源配置 -->
+	 <mvc:resources location="/resources/" mapping="/resources/**"></mvc:resources>
+	 <mvc:resources location="/js/" mapping="/js/**"></mvc:resources>
+	 
+	<!--
+		在使用springMVC进行系统实现时，springMVC默认的解析器里面是没有加入对文件上传的解析的，这可以方便我们实现自己的文件上传。
+		但如果你想使用springMVC对文件上传的解析器来处理文件上传的时候就需要在spring的applicationContext里面加上springMVC提供的MultipartResolver的申明。
+		这样之后，客户端每次进行请求的时候，springMVC都会检查request里面是否包含多媒体信息，如果包含了就会使用MultipartResolver进行解析,
+		springMVC会使用一个支持文件处理的MultipartHttpServletRequest来包裹当前的HttpServletRequest，
+		然后使用MultipartHttpServletRequest就可以对文件进行处理了。Spring已经为我们提供了一个MultipartResolver的实现，我们只需要拿来用就可以了，
+		那就是org.springframework.web.multipart.commons.CommsMultipartResolver。
+		因为springMVC的MultipartResolver底层使用的是Commons-fileupload，所以还需要加入对Commons-fileupload.jar的支持。
+		
+		CommonsMultipartResolver允许设置的属性有：
+   			 defaultEncoding：表示用来解析request请求的默认编码格式，当没有指定的时候根据Servlet规范会使用默认值ISO-8859-1。当request自己指明了它的编码格式的时候就会忽略这里指定的defaultEncoding。
+    		 uploadTempDir：设置上传文件时的临时目录，默认是Servlet容器的临时目录。
+   			 maxUploadSize：设置允许上传的最大文件大小，以字节为单位计算。当设为-1时表示无限制，默认是-1。
+   			 maxInMemorySize：设置在文件上传时允许写到内存中的最大值，以字节为单位计算，默认是10240。
+     
+	 -->
+    <!-- 配置MultipartResolver 用于文件上传 使用spring的CommosMultipartResolver -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+         <property name="defaultEncoding" value="UTF-8"/> 
+       	 <property name="maxUploadSize" value="1000000000"/>
+         <property name="uploadTempDir" value="fileUpload/temp"/>
+   </bean>  
+	
+	
+	<!-- 指定自己定义的validator -->
+    <mvc:annotation-driven validator="validator"/>
+
+    <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+    
+    
+    <!-- 全局错误处理-->  
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
+	    <property name="defaultErrorView">    
+	        <value>/error/error</value>  
+	    </property>  
+	    
+	    <property name="exceptionMappings">
+			<props>
+				<prop key="java.sql.SQLException">showDBError</prop>
+				<prop key="java.lang.RuntimeException">/error/error</prop>
+			</props>
+		</property>
+
+	    
+	    <property name="defaultStatusCode">    
+	        <value>500</value>  
+	    </property>     
+		<property name="warnLogCategory">    
+	        <value>org.springframework.web.servlet.handler.SimpleMappingExceptionResolver</value>  
+	    </property>     
+	</bean>   
+
+
+</beans>
