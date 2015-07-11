@@ -3,6 +3,7 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
 http://www.springframework.org/schema/beans
@@ -12,38 +13,63 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd
 http://www.springframework.org/schema/mvc
 http://www.springframework.org/schema/mvc/spring-mvc.xsd
 http://www.springframework.org/schema/tx
-http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+http://www.springframework.org/schema/tx/spring-tx-4.0.xsd"
+default-lazy-init="true">
 	
-	<!-- 配置数据源 -->  
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >  
-        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>  
-        <property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"></property>  
-        <property name="username" value="PMLF"></property>  
-        <property name="password" value="PMLF"></property>  
-    </bean>  
-    
-    <!-- 配置SessionFactory -->  
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">  
-        <property name="dataSource" ref="dataSource" />  
-        <property name="hibernateProperties">  
+	<!-- 数据源配置, 使用DBCP数据库连接池 -->  
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">  
+            <!-- Connection Info -->  
+            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />  
+            <property name="url" value="jdbc:oracle:thin:@PC-201312101005:1521:tsorcl" />  
+            <property name="username" value="PMLF_TCMA_SC" />  
+            <property name="password" value="PMLF_TCMA_SC" />  
+          
+            <!-- Connection Pooling Info -->  
+            <property name="maxActive" value="100" />  
+            <property name="maxIdle" value="50" />  
+            <property name="defaultAutoCommit" value="false" />  
+            <!-- 连接Idle一个小时后超时 -->  
+            <property name="timeBetweenEvictionRunsMillis" value="3600000" />  
+            <property name="minEvictableIdleTimeMillis" value="3600000" />  
+        </bean>  
+          
+        <!-- 数据源配置,使用应用服务器的数据库连接池 -->  
+        <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/ExampleDB" />-->  
+        
+	 <!-- JPA实体管理工厂的配置 -->  
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">   
+        <property name="dataSource" ref="dataSource"/>  
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>  
+        <property name="packagesToScan" value="com.tsingsoft.system.entity"/><!--待扫描的实体类包，不再需要persistence.xml了-->  
+        <property name="jpaProperties">  
             <props>  
-                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>  
-                <prop key="hibernate.hbm2ddl.auto">update</prop>  
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>  
                 <prop key="hibernate.show_sql">true</prop>  
-                <prop key="hibernate.format_sql">true</prop>  
+                <prop key="hibernate.hbm2ddl.auto">update</prop>  
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>  
             </props>  
         </property>  
-        <property name="annotatedClasses">  
-            <list>  
-                <value>com.tsingsoft.system.entity.User</value>  
-            </list>  
-        </property>  
     </bean>  
-    
-   	<!-- 配置一个事务管理器 -->  
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">  
-        <property name="sessionFactory" ref="sessionFactory"/>  
+      
+    <!--指定实现JPA的适配器-->  
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">  
+        <property name="databasePlatform" value="org.hibernate.dialect.OracleDialect" />  
     </bean>  
+      
+    <!-- Jpa 事务配置 -->  
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">  
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>  
+    </bean>  
+       <!-- JSR303 Validator定义 -->  
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />  
     
+    <!-- Spring Data Jpa配置 -->  
+    <!--  
+    <jpa:repositories base-package="cn.ibeans"  transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"/>  
+    -->  
+    <!-- 使用annotation定义事务 -->  
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />  
     
+        
+        
 </beans>

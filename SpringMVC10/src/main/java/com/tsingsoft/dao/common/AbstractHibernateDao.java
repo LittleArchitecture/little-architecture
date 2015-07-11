@@ -3,13 +3,11 @@
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import com.google.common.base.Preconditions;
 
+import javax.persistence.EntityManager;  
+import javax.persistence.PersistenceContext;  
+ 
 
 /**
  * 
@@ -29,48 +27,43 @@ public abstract class AbstractHibernateDao<T extends Serializable> implements IO
     
     private Class<T> clazz;
     
-    @Resource(name="sessionFactory")
-    private SessionFactory sessionFactory;
+    @PersistenceContext  
+    private EntityManager em;  
 
     protected final void setClazz(final Class<T> clazzToSet) {
         this.clazz = Preconditions.checkNotNull(clazzToSet);
     }
     
-    protected final Session getCurrentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 
-    @SuppressWarnings("unchecked")
 	@Override
     public final T findOne(final long id) {
-        return (T)getCurrentSession().get(clazz, id);
+    	return (T)em.find(clazz, id);
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@Override
     public final List<T> findAll() {
-        return getCurrentSession().createQuery("from " + clazz.getName()).list();
+    	return (List<T>) em.getEntityGraphs(clazz);
+//        return (List<T>) em.getEntityGraphs(clazz);
     }
 
     @Override
     public final void create(final T entity) {
          Preconditions.checkNotNull(entity);
-         // getCurrentSession().persist(entity);
-         getCurrentSession().saveOrUpdate(entity);
+         em.persist(entity);
     }
 
     @Override
     public final T update(final T entity) {
         Preconditions.checkNotNull(entity);
-        getCurrentSession().merge(entity);
+        em.persist(entity);
         return entity;
-        //return (T)getCurrentSession().merge(entity);
     }
 
     @Override
     public final void delete(final T entity) {
          Preconditions.checkNotNull(entity);
-         getCurrentSession().delete(entity);
+         em.remove(entity);
     }
 
   

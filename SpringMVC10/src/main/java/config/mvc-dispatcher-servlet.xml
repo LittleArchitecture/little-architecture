@@ -25,12 +25,16 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
     
 	<!-- 启动自动扫描该包下所有的@Controller -->
     <context:component-scan base-package="com.tsingsoft.*.controller" />  
+    
+      <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->  
+    <context:component-scan base-package="com.tsingsoft.system.entity">  
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
+    </context:component-scan>  
 
     <!-- spring context配置文件  -->  
     <context:component-scan base-package="com.tsingsoft.">  
         <context:exclude-filter type="regex" expression=".system.*Controller*" />  
     </context:component-scan>  
-    
 	<!-- MVC开启注解配置 -->
 	<mvc:annotation-driven />
 	
@@ -82,14 +86,14 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 	
 	<!-- 指定自己定义的validator -->
     <mvc:annotation-driven validator="validator"/>
-
+ 	
     <!-- 以下 validator  ConversionService 在使用 mvc:annotation-driven 会 自动注册-->
+    <!--
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
         <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
-        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
         <property name="validationMessageSource" ref="messageSource"/>
     </bean>
-    
+    -->
     
     <!-- 全局错误处理-->  
 	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">  
@@ -112,6 +116,5 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 	        <value>org.springframework.web.servlet.handler.SimpleMappingExceptionResolver</value>  
 	    </property>     
 	</bean>   
-
 
 </beans>
