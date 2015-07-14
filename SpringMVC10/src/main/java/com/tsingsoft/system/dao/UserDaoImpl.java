@@ -1,6 +1,8 @@
 ﻿package com.tsingsoft.system.dao;
 
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Repository;
 
 import com.tsingsoft.dao.common.AbstractHibernateDao;
@@ -21,6 +23,7 @@ import com.tsingsoft.system.entity.User;
 * @version  V1.0 
 *
  */
+@Transactional
 @Repository("userDao")
 public class UserDaoImpl extends AbstractHibernateDao<User>  implements UserDao {
 

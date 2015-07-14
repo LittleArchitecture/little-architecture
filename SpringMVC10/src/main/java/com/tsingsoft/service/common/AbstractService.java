@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.tsingsoft.dao.common.IOperations;
 
 
@@ -23,6 +25,7 @@ import com.tsingsoft.dao.common.IOperations;
 * @version  V1.0 
 *
  */
+@Transactional
 public abstract class AbstractService<T extends Serializable> implements IOperations<T> {
     
 	protected abstract IOperations<T> getDao()  throws Exception;

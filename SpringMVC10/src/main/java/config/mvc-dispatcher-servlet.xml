@@ -27,11 +27,11 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
     <context:component-scan base-package="com.tsingsoft.*.controller" />  
     
       <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->  
-      <!-- 
     <context:component-scan base-package="com.tsingsoft.system.entity">  
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>  
     </context:component-scan>
-    -->  
+    
+    
     <!-- spring context配置文件  -->  
     <context:component-scan base-package="com.tsingsoft.">  
         <context:exclude-filter type="regex" expression=".system.*Controller*" />  
@@ -43,8 +43,7 @@ http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
     <!-- 基于注释的事务，当注释中发现@Transactional时，使用id为“transactionManager”的事务管理器  -->
     <!-- 如果没有设置transaction-manager的值，则spring以缺省默认的事务管理器来处理事务，默认事务管理器为第一个加载的事务管理器 -->
     <!-- 只有@Transactional注释时，传播模式要设置为 REQUIRED，只读标志设置为 false，事务隔离级别设置为 READ_COMMITTED，而且事务不会针对受控异常（checked exception）回滚。 -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
-	
+    <tx:annotation-driven transaction-manager="transactionManager"/>  
 	<!-- 视图控制 -->
 	<bean  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		

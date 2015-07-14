@@ -26,8 +26,7 @@ import com.google.common.base.Preconditions;
 *
  */
 public abstract class AbstractHibernateDao<T extends Serializable> implements IOperations<T> {
-
-	@PersistenceContext  
+	@PersistenceContext
     private EntityManager em;  
 	
     private Class<T> clazz;

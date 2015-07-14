@@ -1,6 +1,7 @@
 package com.tsingsoft.system.controller;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +20,10 @@ import com.tsingsoft.system.service.UserService;
 /**
  * 
  * 
- * 项目名称：SpringMVC9 类名称：UserControllerRest 类描述： 现实Rest用户管理 创建人：Think
+ * 项目名称：SpringMVC9 
+ * 类名称：UserControllerRest 
+ * 类描述： 现实Rest用户管理 
+ * 创建人：Think
  * 创建时间：2015-7-1 下午3:43:52
  * 修改人：fchao Zhai  
  * 修改时间：2015-7-14 下午4:31:26  
@@ -27,7 +31,7 @@ import com.tsingsoft.system.service.UserService;
  * @version
  * 
  */
-
+@Transactional
 @Controller
 @RequestMapping("/system/UserControllerRest")
 public class UserControllerRest {
