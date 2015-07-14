@@ -1,6 +1,5 @@
 ﻿package com.tsingsoft.system.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -21,8 +20,8 @@ import com.tsingsoft.system.service.UserService;
 * 类描述： 用户管理控制器类 
 * 创建人：Nick Shang
 * 创建时间：2015-7-5 下午4:24:34  
-* 修改人：Think  
-* 修改时间：2015-7-5 下午4:24:34  
+* 修改人：fchao Zhai  
+* 修改时间：2015-7-14 下午4:31:26  
 * 修改备注：  
 * @version  V1.0 
 *
@@ -45,21 +44,21 @@ public class UserController {
 	  }
 
 	  @RequestMapping("/toUpdateUser")
-	  public String toUpdateUser(int id, ModelMap modelMap) {
+	  public String toUpdateUser(int id, ModelMap modelMap)  throws Exception{
 	    User user = userService.findOne(id);
 	    modelMap.addAttribute("user", user);
 	    return "editUser";
 	  }
 
 	  @RequestMapping("/addUser")
-	  public String addUser(User user) {
+	  public String addUser(User user)  throws Exception{
 	    userService.create(user);
 	    return "redirect:/user/getAllUser";
 
 	  }
 
 	  @RequestMapping("/getAllUser")
-	  public String getAllUsers(ModelMap modelMap) {
+	  public String getAllUsers(ModelMap modelMap)  throws Exception{
 	    List<User> userList = userService.findAll();
 	    modelMap.addAttribute("userList", userList);
 	    return "index";
@@ -68,7 +67,7 @@ public class UserController {
 
 	  @RequestMapping("/delUser")
 	  public String delUser(int id, HttpServletResponse response)
-	      throws IOException {
+	      throws Exception {
 	    User user = userService.findOne(id);
 	    System.err.println(user.getName());
 	    userService.delete(user);

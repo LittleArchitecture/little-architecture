@@ -5,12 +5,18 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+
+@NamedQuery(
+        name="findAllUsers",
+        query="SELECT c FROM User c"
+)
 
 /**
  * 
@@ -20,9 +26,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 * 类描述：  用户类
 * 创建人：Think  
 * 创建时间：2015-6-24 下午4:48:09  
-* 修改人：Think  
-* 修改时间：2015-6-24 下午4:48:09  
-* 修改备注：  
+* 修改人：fchao Zhai  
+* 修改时间：2015-7-14 下午4:31:26  
+* 修改备注：    
 * @version   
 *
  */
@@ -30,12 +36,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(name = "t_users")
 public class User implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2491292855748597840L;
 
 	
+	 
 	@Id
 	/**
 	 * 主键

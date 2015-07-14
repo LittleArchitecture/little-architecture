@@ -1,5 +1,6 @@
 ﻿package com.tsingsoft.system.dao;
 
+
 import org.springframework.stereotype.Repository;
 
 import com.tsingsoft.dao.common.AbstractHibernateDao;
