@@ -103,6 +103,14 @@
 		
 		  <!-- logger end -->  
 	
+		<!-- google start -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>r05</version>
+		</dependency>
+		<!-- google end -->
+	
 		<!-- @Inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>

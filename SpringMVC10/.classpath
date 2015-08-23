@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_04"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/guava-r07.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/ojdbc14.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

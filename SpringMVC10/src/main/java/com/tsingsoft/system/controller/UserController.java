@@ -59,7 +59,7 @@ public class UserController {
 
 	  @RequestMapping("/getAllUser")
 	  public String getAllUsers(ModelMap modelMap)  throws Exception{
-	    List<User> userList = userService.findAll();
+	    List<User> userList = userService.findAll("findAllUsers");
 	    modelMap.addAttribute("userList", userList);
 	    return "index";
 

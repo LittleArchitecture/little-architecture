@@ -46,7 +46,7 @@ public class UserControllerRest {
 	 */
 	@RequestMapping("/get")
 	public String get(ModelMap modelMap) throws Exception {
-		modelMap.put("user", userService.findAll());
+		modelMap.put("user", userService.findAll("findAllUsers"));
 		return "UserRest/User";
 	}
 

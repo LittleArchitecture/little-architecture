@@ -101,8 +101,8 @@ public abstract class AbstractService<T extends Serializable> implements IOperat
     }
 
     @Override
-    public List<T> findAll()  throws Exception{
-        return getDao().findAll();
+    public List<T> findAll(String namedQuery)  throws Exception{
+        return getDao().findAll(namedQuery);
     }
 
     @Override

@@ -1,14 +1,23 @@
-package com.tsingsoft.system.service;
+package com.tsingsoft.system.service.com.tsingsoft.system.service;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
-import junit.framework.TestCase;
+
+import org.aspectj.lang.annotation.SuppressAjWarnings;
+import org.junit.Before;
+import org.junit.Test;
 
 import org.junit.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+
+
 import com.tsingsoft.system.entity.User;
+import com.tsingsoft.system.service.UserService;
 
 /**
  * 
@@ -24,35 +33,39 @@ import com.tsingsoft.system.entity.User;
 * @version  V1.0 
 *
  */
-public class UserServiceImplTest extends TestCase {
+public class UserServiceImplTest{ 
 
-	private ApplicationContext ctx;
+	private UserService userService;
 
-	@Override
-	protected void setUp() throws Exception {
-		String[] locations = { "config/Sping-Context.xml","config/mvc-dispatcher-servlet.xml","config/Spring-JPA-Hibernate.xml"};
-		ctx = new ClassPathXmlApplicationContext(locations);
+	@Before
+	public void before() throws Exception { 
+		
+		String[] locations = { "classpath:config/Sping-Context.xml","classpath:config/mvc-dispatcher-servlet.xml","classpath:config/Spring-JPA-Hibernate.xml"};
+		@SuppressAjWarnings("resource")
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(locations);
+		 userService = (UserService) ctx.getBean("userService");
 	}
 	
+	@Test
 	public void testFindAll() {
-
+		
 		List<User>  userList = null;
 
-		UserService userService = (UserService) ctx.getBean("userService");
+		
 		try {
-			userList = userService.findAll();
+			userList = userService.findAll("findAllUsers");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Assert.assertNotNull(userList);
 	}
 
+	@Test
 	public void testCreate() {
-
-		UserService userService = (UserService) ctx.getBean("userService");
+		
 		User user = new User();
 		user.setId(1);
-		user.setName("张三");
+		user.setName("李四");
 		user.setAge("12");
 		try {
 			userService.create(user);
@@ -61,40 +74,39 @@ public class UserServiceImplTest extends TestCase {
 		}
 	}
 	
+	@Test
 	public void testEdit() {
-
-		UserService userService = (UserService) ctx.getBean("userService");
+		
 		User user = new User();
-		user.setId(1);
+		user.setId(0);
 		user.setName("王五");
 		user.setAge("12");
 		try {
 			User userCurr = userService.update(user);
-			assertEquals(1, userCurr.getId());
+			assertNotNull(userCurr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
+	@Test
 	public void testQuery() {
-
+		
 		User userEntity = null;
 
-		UserService userService = (UserService) ctx.getBean("userService");
 		User user = new User();
-		user.setId(1);
+		user.setId(0);
 		try {
 			userEntity = userService.findOne(user.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		assertNotNull(userEntity);
-		assertEquals(1, userEntity.getId());
 	}
 	
+	@Test
 	public void testDel() {
-
-		UserService userService = (UserService) ctx.getBean("userService");
+		
 		User user = new User();
 		user.setId(1);
 		user.setName("张三");

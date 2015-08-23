@@ -32,7 +32,7 @@ public interface IOperations<T extends Serializable> {
 	 * 功能描述：查询所有对象
 	 * @return  返回查找根据查找的所有对象
 	 */
-    List<T> findAll() throws Exception;
+    List<T> findAll(String namedQuery) throws Exception;
 
     /**
      * 功能描述：创建对象(可确定为新建实体；返回处于托管状态的实例)

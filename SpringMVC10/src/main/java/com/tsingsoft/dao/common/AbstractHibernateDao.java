@@ -116,8 +116,8 @@ public abstract class AbstractHibernateDao<T extends Serializable> implements IO
 
 	@SuppressWarnings("unchecked")
 	@Override
-    public final List<T> findAll() {
-		Query query = em.createNamedQuery("findAllUsers");
+    public final List<T> findAll(String namedQuery) {
+		Query query = em.createNamedQuery(namedQuery);
 		return query.getResultList();
     }
 	
