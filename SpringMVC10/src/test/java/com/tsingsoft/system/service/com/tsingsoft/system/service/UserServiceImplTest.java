@@ -1,16 +1,17 @@
 package com.tsingsoft.system.service.com.tsingsoft.system.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+
+import org.junit.Assert;
 
 import java.util.List;
+
+import javax.persistence.Transient;
 
 
 import org.aspectj.lang.annotation.SuppressAjWarnings;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.junit.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -38,7 +39,7 @@ public class UserServiceImplTest{
 	private UserService userService;
 
 	@Before
-	public void before() throws Exception { 
+	public void before() throws Exception {   
 		
 		String[] locations = { "classpath:config/Sping-Context.xml","classpath:config/mvc-dispatcher-servlet.xml","classpath:config/Spring-JPA-Hibernate.xml"};
 		@SuppressAjWarnings("resource")
@@ -83,7 +84,7 @@ public class UserServiceImplTest{
 		user.setAge("12");
 		try {
 			User userCurr = userService.update(user);
-			assertNotNull(userCurr);
+			Assert.assertNotNull(userCurr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -101,12 +102,12 @@ public class UserServiceImplTest{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		assertNotNull(userEntity);
+		Assert.assertNotNull(userEntity);
 	}
 	
 	@Test
-	public void testDel() {
-		
+	@Transient
+	public void testDel() throws Exception{
 		User user = new User();
 		user.setId(1);
 		user.setName("张三");
@@ -116,6 +117,7 @@ public class UserServiceImplTest{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		throw new Exception();
 	}
 	
 }
